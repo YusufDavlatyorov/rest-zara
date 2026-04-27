@@ -56,14 +56,13 @@ class CreateOrderSerializer(serializers.Serializer):
         user = self.context['request'].user
         cart = user.cart
 
-        # Проверяем stock перед созданием заказа
         for item in cart.items.select_related('variant'):
             if item.quantity > item.variant.stock:
                 raise serializers.ValidationError(
                     f"'{item.variant.product.name}' - not enough stock."
                 )
 
-        # Создаём заказ
+
         order = Order.objects.create(
             user=user,
             shipping_address=validated_data['shipping_address'],
@@ -71,7 +70,6 @@ class CreateOrderSerializer(serializers.Serializer):
             total_price=cart.total_price
         )
 
-        # Создаём items и уменьшаем stock
         for item in cart.items.select_related('variant__product', 'variant__color', 'variant__size'):
             OrderItem.objects.create(
                 order=order,

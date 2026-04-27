@@ -6,14 +6,12 @@ from .serializers import CategorySerializer, ProductListSerializer, ProductDetai
 from .filters import ProductFilter
 from accounts.permissions import IsAdminRole
 
-# --- КАТЕГОРИИ ---
-class CategoryListView(generics.ListAPIView):
-    # Показываем только главные категории, вложенные подтянутся через Serializer
+
+class CategoryListView(generics.ListCreateAPIView):
     queryset = Category.objects.filter(parent=None).prefetch_related('children')
     serializer_class = CategorySerializer
     permission_classes = [AllowAny]
 
-# --- ТОВАРЫ (Публичные) ---
 class ProductListView(generics.ListAPIView):
     queryset = Product.objects.filter(is_active=True).prefetch_related(
         'images', 'variants__color', 'variants__size'
@@ -33,14 +31,12 @@ class ProductDetailView(generics.RetrieveAPIView):
     permission_classes = [AllowAny]
     lookup_field = 'slug'
 
-# --- АДМИН-ПАНЕЛЬ ---
+
 class ProductCreateView(generics.CreateAPIView):
-    # Использует твой исправленный метод .create() из сериализатора
     serializer_class = ProductDetailSerializer
     permission_classes = [IsAdminRole]
 
 class ProductUpdateView(generics.RetrieveUpdateDestroyAPIView):
-    # Добавляем prefetch для корректного отображения при обновлении
     queryset = Product.objects.all().prefetch_related('images', 'variants')
     serializer_class = ProductDetailSerializer
     permission_classes = [IsAdminRole]

@@ -24,7 +24,6 @@ class CartView(APIView):
     @swagger_auto_schema(request_body=CartItemSerializer)
     def post(self, request):
         """Добавить товар в корзину"""
-        # Используем сериализатор для валидации входных данных
         serializer = CartItemSerializer(data=request.data)
         if not serializer.is_valid():
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
@@ -32,7 +31,6 @@ class CartView(APIView):
         variant_id = serializer.validated_data['variant_id']
         quantity = serializer.validated_data.get('quantity', 1)
 
-        # variant_id уже проверен в сериализаторе (validate_variant_id)
         variant = ProductVariant.objects.get(id=variant_id)
         cart = self.get_cart(request.user)
         
@@ -43,7 +41,6 @@ class CartView(APIView):
         else:
             item.quantity = quantity
 
-        # Финальная проверка остатка
         if item.quantity > variant.stock:
             return Response({'detail': f'Not enough stock. Max available: {variant.stock}'}, 
                             status=status.HTTP_400_BAD_REQUEST)

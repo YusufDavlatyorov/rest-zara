@@ -16,7 +16,6 @@ class Order(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='orders')
     status = models.CharField(max_length=20, choices=Status.choices, default=Status.PENDING)
 
-    # Адрес доставки (копируем с профиля, чтобы не потерять если юзер изменит)
     shipping_address = models.TextField()
     phone = models.CharField(max_length=20)
 
@@ -35,7 +34,6 @@ class OrderItem(models.Model):
     order = models.ForeignKey(Order, on_delete=models.CASCADE, related_name='items')
     variant = models.ForeignKey(ProductVariant, on_delete=models.SET_NULL, null=True)
 
-    # Копируем данные товара на момент заказа
     product_name = models.CharField(max_length=255)
     color_name = models.CharField(max_length=50)
     size_name = models.CharField(max_length=10)

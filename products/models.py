@@ -37,15 +37,15 @@ class Product(models.Model):
 
 
 class Color(models.Model):
-    name = models.CharField(max_length=50)       # "Red", "Black"
-    hex_code = models.CharField(max_length=7)    # "#FF0000"
+    name = models.CharField(max_length=50)       
+    hex_code = models.CharField(max_length=7)
 
     def __str__(self):
         return self.name
 
 
 class Size(models.Model):
-    name = models.CharField(max_length=10)       # "XS", "S", "M", "L", "XL"
+    name = models.CharField(max_length=10)       
 
     def __str__(self):
         return self.name

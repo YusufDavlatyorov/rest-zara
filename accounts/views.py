@@ -6,14 +6,12 @@ from rest_framework_simplejwt.tokens import RefreshToken
 from .models import User
 from .serializers import RegisterUserSerializer, MeSerializer
 from .permissions import IsAdminRole
-# --- ПУБЛИЧНЫЕ ---
 
 class RegisterView(generics.CreateAPIView):
     queryset = User.objects.all()
     serializer_class = RegisterUserSerializer
     permission_classes = [permissions.AllowAny]
 
-# --- ДЛЯ АВТОРИЗОВАННЫХ (ME) ---
 
 class MeView(generics.RetrieveUpdateAPIView):
     serializer_class = MeSerializer
@@ -34,14 +32,13 @@ class LogoutView(APIView):
         except Exception:
             return Response({"error": "Invalid token"}, status=status.HTTP_400_BAD_REQUEST)
 
-# --- ТОЛЬКО ДЛЯ АДМИНОВ (USERS) ---
 
 class UserListView(generics.ListAPIView):
     queryset = User.objects.all().select_related('profile')
     serializer_class = MeSerializer
-    permission_classes = [IsAdminRole] # Только Admin
+    permission_classes = [IsAdminRole] 
 
 class UserDetailAdminView(generics.RetrieveUpdateDestroyAPIView):
     queryset = User.objects.all().select_related('profile')
     serializer_class = MeSerializer
-    permission_classes = [IsAdminRole] # Только Admin
+    permission_classes = [IsAdminRole] 

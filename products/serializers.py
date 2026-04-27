@@ -70,18 +70,14 @@ class ProductDetailSerializer(serializers.ModelSerializer):
         ]
 
     def create(self, validated_data):
-        # 1. Вытаскиваем вложенные данные
         category_data = validated_data.pop('category')
         variants_data = validated_data.pop('variants')
 
-        # 2. Находим или создаем категорию
+
         category_slug = category_data.pop('slug')
         category, _ = Category.objects.get_or_create(slug=category_slug, defaults=category_data)
-
-        # 3. Создаем продукт
         product = Product.objects.create(category=category, **validated_data)
 
-        # 4. Создаем варианты (цвета и размеры)
         for variant in variants_data:
             color_data = variant.pop('color')
             size_data = variant.pop('size')

@@ -6,16 +6,13 @@ from .views import (
 )
 
 urlpatterns = [
-    # Все
     path('register/', RegisterView.as_view(), name='register'),
     path('login/', TokenObtainPairView.as_view(), name='login'),
     path('login/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
     
-    # Авторизован (Личное)
     path('logout/', LogoutView.as_view(), name='logout'),
     path('me/', MeView.as_view(), name='me'),
     
-    # Только Admin
     path('users/', UserListView.as_view(), name='user-list'),
     path('users/<int:pk>/', UserDetailAdminView.as_view(), name='user-admin-detail'),
 ]
